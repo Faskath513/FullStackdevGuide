@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Full-Stack AI Development Guide — M.H.M.FASKATH</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080c14;
+  --surface:#0d1320;
+  --surface2:#111827;
+  --border:#1e2d45;
+  --accent:#00e5ff;
+  --accent2:#7c3aed;
+  --accent3:#10b981;
+  --accent4:#f59e0b;
+  --accent5:#ef4444;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --card:#0f1a2e;
+  --glow:rgba(0,229,255,0.15);
+  --glow2:rgba(124,58,237,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Syne',sans-serif;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* BG GRID */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NOISE GRAIN */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:0.5;
+}
+
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ── HEADER ── */
+header{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+  padding:60px 24px;
+}
+.orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  pointer-events:none;
+}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,rgba(0,229,255,0.12),transparent 70%);top:-100px;left:-150px;animation:drift1 8s ease-in-out infinite alternate}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);bottom:-100px;right:-100px;animation:drift2 10s ease-in-out infinite alternate}
+@keyframes drift1{from{transform:translate(0,0)}to{transform:translate(60px,40px)}}
+@keyframes drift2{from{transform:translate(0,0)}to{transform:translate(-40px,60px)}}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,229,255,0.08);
+  border:1px solid rgba(0,229,255,0.25);
+  border-radius:100px;
+  padding:6px 18px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--accent);
+  letter-spacing:0.1em;
+  margin-bottom:28px;
+  animation:fadeUp 0.8s ease both;
+}
+.badge::before{content:'●';animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+header h1{
+  font-size:clamp(2.8rem,6vw,5.5rem);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  animation:fadeUp 0.9s ease 0.1s both;
+}
+.gradient-text{
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 50%,var(--accent3) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+header p.subtitle{
+  font-size:1.1rem;
+  color:var(--muted);
+  max-width:600px;
+  margin:20px auto 40px;
+  line-height:1.7;
+  animation:fadeUp 1s ease 0.2s both;
+}
+
+/* AUTHOR CARD */
+.author-card{
+  display:flex;align-items:center;gap:20px;
+  background:rgba(13,19,32,0.8);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px 28px;
+  backdrop-filter:blur(20px);
+  animation:fadeUp 1s ease 0.35s both;
+  position:relative;
+  overflow:hidden;
+}
+.author-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,229,255,0.05),rgba(124,58,237,0.05));
+  pointer-events:none;
+}
+.avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:800;color:#fff;
+  flex-shrink:0;
+  position:relative;
+}
+.avatar::after{
+  content:'';position:absolute;inset:-3px;
+  border-radius:50%;
+  border:2px solid transparent;
+  background:linear-gradient(135deg,var(--accent),var(--accent2)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;
+  mask-composite:exclude;
+}
+.author-info{text-align:left}
+.author-info h3{font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:0.02em}
+.author-info p{font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px}
+.author-contacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.contact-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;
+  color:var(--accent);
+  background:rgba(0,229,255,0.08);
+  border:1px solid rgba(0,229,255,0.2);
+  border-radius:6px;
+  padding:4px 10px;
+  text-decoration:none;
+  transition:all 0.2s;
+}
+.contact-chip:hover{background:rgba(0,229,255,0.18);border-color:var(--accent)}
+
+/* STEPS NAV */
+.steps-nav{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+  margin:60px 0 20px;
+  animation:fadeUp 1s ease 0.5s both;
+}
+.step-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:0.8rem;font-family:'JetBrains Mono',monospace;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:8px 16px;
+  color:var(--muted);
+  text-decoration:none;
+  transition:all 0.25s;
+  cursor:pointer;
+}
+.step-pill:hover,.step-pill.active{
+  background:rgba(0,229,255,0.08);
+  border-color:rgba(0,229,255,0.4);
+  color:var(--accent);
+}
+.step-pill span.num{
+  background:var(--accent);
+  color:#000;
+  font-weight:700;
+  width:20px;height:20px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION ── */
+section{padding:80px 0}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:'';height:1px;width:30px;background:var(--accent)}
+.section-title{
+  font-size:clamp(1.8rem,3.5vw,2.8rem);
+  font-weight:800;
+  letter-spacing:-0.02em;
+  line-height:1.1;
+  margin-bottom:16px;
+}
+.section-desc{
+  color:var(--muted);
+  font-size:1rem;
+  line-height:1.7;
+  max-width:700px;
+  margin-bottom:48px;
+}
+
+/* ── PHASE CARD ── */
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.phase-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;
+}
+.phase-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(0,229,255,0.35);
+  box-shadow:0 20px 60px rgba(0,229,255,0.08);
+}
+.phase-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.phase-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem;
+  color:var(--accent);
+  background:rgba(0,229,255,0.1);
+  border:1px solid rgba(0,229,255,0.2);
+  padding:4px 10px;
+  border-radius:6px;
+  display:inline-block;
+  margin-bottom:16px;
+}
+.phase-card h3{font-size:1.15rem;font-weight:700;margin-bottom:12px;color:#fff}
+.phase-card p{font-size:0.88rem;color:var(--muted);line-height:1.65}
+.phase-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tag{
+  font-size:0.72rem;
+  font-family:'JetBrains Mono',monospace;
+  padding:3px 10px;
+  border-radius:4px;
+  border:1px solid;
+}
+.tag.cyan{color:var(--accent);border-color:rgba(0,229,255,0.25);background:rgba(0,229,255,0.06)}
+.tag.purple{color:#a78bfa;border-color:rgba(167,139,250,0.25);background:rgba(167,139,250,0.06)}
+.tag.green{color:var(--accent3);border-color:rgba(16,185,129,0.25);background:rgba(16,185,129,0.06)}
+.tag.amber{color:var(--accent4);border-color:rgba(245,158,11,0.25);background:rgba(245,158,11,0.06)}
+.tag.red{color:var(--accent5);border-color:rgba(239,68,68,0.25);background:rgba(239,68,68,0.06)}
+
+/* ── TECH STACK ── */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.stack-item{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:22px;
+  display:flex;flex-direction:column;gap:10px;
+  transition:all 0.25s;
+}
+.stack-item:hover{
+  border-color:rgba(0,229,255,0.3);
+  background:rgba(13,26,46,0.9);
+}
+.stack-icon{font-size:1.6rem}
+.stack-item h4{font-size:0.95rem;font-weight:700;color:#fff}
+.stack-item p{font-size:0.8rem;color:var(--muted);line-height:1.6}
+.stack-item .why{
+  font-size:0.73rem;
+  color:var(--accent3);
+  font-family:'JetBrains Mono',monospace;
+  border-top:1px solid var(--border);
+  padding-top:10px;
+  margin-top:4px;
+}
+
+/* ── CODE BLOCKS ── */
+.code-section{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  margin:24px 0;
+}
+.code-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,0.3);
+}
+.code-header .dots{display:flex;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.r{background:#ef4444}
+.dot.y{background:#f59e0b}
+.dot.g{background:#10b981}
+.code-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;
+  color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.code-title .lang{
+  background:rgba(0,229,255,0.1);
+  color:var(--accent);
+  font-size:0.7rem;
+  padding:2px 8px;
+  border-radius:4px;
+  border:1px solid rgba(0,229,255,0.2);
+}
+.copy-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;
+  color:var(--muted);
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:4px 12px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.copy-btn:hover{color:var(--accent);border-color:rgba(0,229,255,0.3)}
+.code-body{
+  padding:20px;
+  overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.82rem;
+  line-height:1.8;
+  tab-size:2;
+}
+.code-body code{display:block;white-space:pre}
+/* Syntax colors */
+.k{color:#7c3aed} /* keyword */
+.s{color:#10b981} /* string */
+.c{color:#475569} /* comment */
+.n{color:#00e5ff} /* name/fn */
+.v{color:#f59e0b} /* variable */
+.p{color:#e2e8f0} /* punctuation */
+.cmd-line{display:flex;align-items:center;gap:12px;margin:4px 0}
+.prompt{color:var(--accent3)}
+.cmd{color:var(--text)}
+.line-comment{color:var(--muted);font-style:italic}
+
+/* ── PROMPT BOX ── */
+.prompt-box{
+  background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(0,229,255,0.05));
+  border:1px solid rgba(124,58,237,0.3);
+  border-radius:16px;
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+  margin:24px 0;
+}
+.prompt-box::before{
+  content:'PROMPT';
+  position:absolute;top:16px;right:20px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem;
+  color:rgba(124,58,237,0.5);
+  letter-spacing:0.15em;
+}
+.prompt-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;
+  color:#a78bfa;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.prompt-label::before{content:'⬡';font-size:1rem}
+.prompt-box p,.prompt-box li{
+  font-size:0.875rem;
+  color:var(--text);
+  line-height:1.8;
+}
+.prompt-box ul,.prompt-box ol{padding-left:20px;margin-top:8px}
+.prompt-box li{margin:4px 0}
+.prompt-box strong{color:var(--accent)}
+
+/* ── DIVIDER ── */
+.divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+  margin:20px 0;
+}
+
+/* ── STEP HEADER ── */
+.step-header{
+  display:flex;align-items:flex-start;gap:24px;
+  margin-bottom:40px;
+}
+.step-num-big{
+  flex-shrink:0;
+  width:72px;height:72px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;
+  font-size:1.6rem;font-weight:700;
+  color:#000;
+  position:relative;
+}
+.step-num-big::after{
+  content:'';
+  position:absolute;inset:-2px;
+  border-radius:22px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  z-index:-1;
+  filter:blur(12px);
+  opacity:0.4;
+}
+.step-meta h2{
+  font-size:clamp(1.5rem,3vw,2.2rem);
+  font-weight:800;
+  letter-spacing:-0.02em;
+  color:#fff;
+}
+.step-meta p{color:var(--muted);font-size:0.92rem;margin-top:6px;line-height:1.6;max-width:700px}
+
+/* ── CHECKLIST ── */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:10px}
+.checklist li{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:0.88rem;
+  line-height:1.5;
+  transition:border-color 0.2s;
+}
+.checklist li:hover{border-color:rgba(0,229,255,0.2)}
+.checklist li::before{
+  content:'✓';
+  color:var(--accent3);
+  font-weight:700;
+  flex-shrink:0;
+  margin-top:1px;
+}
+.checklist li strong{color:#fff}
+
+/* ── FLOW DIAGRAM ── */
+.flow{display:flex;flex-direction:column;gap:0;align-items:flex-start;max-width:700px}
+.flow-item{
+  display:flex;align-items:center;gap:16px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 20px;
+  width:100%;
+  transition:all 0.25s;
+}
+.flow-item:hover{border-color:rgba(0,229,255,0.3);transform:translateX(4px)}
+.flow-arrow{
+  width:2px;height:28px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  margin-left:34px;
+}
+.flow-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(124,58,237,0.15));
+  border:1px solid rgba(0,229,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.flow-text h4{font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:2px}
+.flow-text p{font-size:0.78rem;color:var(--muted)}
+
+/* ── TOOL CARDS ── */
+.tool-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px}
+.tool-card{
+  flex:1;min-width:200px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  transition:all 0.25s;
+}
+.tool-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.tool-card .icon{font-size:2rem;margin-bottom:10px}
+.tool-card h4{font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:6px}
+.tool-card p{font-size:0.78rem;color:var(--muted);line-height:1.5}
+.tool-card a{
+  display:inline-block;
+  margin-top:10px;
+  font-size:0.75rem;
+  font-family:'JetBrains Mono',monospace;
+  color:var(--accent);
+  text-decoration:none;
+  border:1px solid rgba(0,229,255,0.25);
+  padding:4px 12px;
+  border-radius:6px;
+  transition:all 0.2s;
+}
+.tool-card a:hover{background:rgba(0,229,255,0.1)}
+
+/* ── API TABLE ── */
+.api-table{width:100%;border-collapse:collapse;margin:16px 0}
+.api-table th{
+  text-align:left;
+  padding:12px 16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,0.2);
+}
+.api-table td{
+  padding:12px 16px;
+  font-size:0.83rem;
+  border-bottom:1px solid rgba(30,45,69,0.5);
+  vertical-align:top;
+}
+.api-table tr:hover td{background:rgba(0,229,255,0.02)}
+.method{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;
+  padding:3px 8px;
+  border-radius:5px;
+  font-weight:700;
+}
+.get{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)}
+.post{background:rgba(0,229,255,0.1);color:var(--accent);border:1px solid rgba(0,229,255,0.25)}
+.put{background:rgba(245,158,11,0.1);color:var(--accent4);border:1px solid rgba(245,158,11,0.25)}
+.delete{background:rgba(239,68,68,0.1);color:var(--accent5);border:1px solid rgba(239,68,68,0.25)}
+.route{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#fff}
+.desc-cell{color:var(--muted);font-size:0.82rem}
+
+/* ── ALERT ── */
+.alert{
+  display:flex;gap:14px;
+  padding:18px 20px;
+  border-radius:12px;
+  margin:20px 0;
+  font-size:0.87rem;
+  line-height:1.65;
+}
+.alert.info{background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-left:3px solid var(--accent)}
+.alert.warn{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-left:3px solid var(--accent4)}
+.alert.success{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-left:3px solid var(--accent3)}
+.alert-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px}
+.alert p{color:var(--text)}
+.alert strong{color:#fff}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{
+  content:'';position:absolute;left:7px;top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2),transparent);
+}
+.tl-item{position:relative;margin-bottom:32px}
+.tl-dot{
+  position:absolute;left:-26px;top:4px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 12px rgba(0,229,255,0.5);
+}
+.tl-item h4{font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:8px}
+.tl-item p{font-size:0.85rem;color:var(--muted);line-height:1.65}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--surface2);
+  border-top:1px solid var(--border);
+  padding:60px 24px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+footer::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 600px 200px at 50% 100%,rgba(0,229,255,0.04),transparent);
+  pointer-events:none;
+}
+.footer-name{
+  font-size:1.8rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-0.02em;
+  margin-bottom:8px;
+}
+.footer-role{font-size:0.88rem;color:var(--muted);margin-bottom:24px;font-family:'JetBrains Mono',monospace}
+.footer-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:40px}
+.footer-link{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:0.82rem;
+  font-family:'JetBrains Mono',monospace;
+  color:var(--text);
+  text-decoration:none;
+  transition:all 0.25s;
+}
+.footer-link:hover{border-color:rgba(0,229,255,0.35);color:var(--accent);background:rgba(0,229,255,0.05)}
+footer .copy{font-size:0.78rem;color:var(--muted)}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-indicator{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);
+}
+.scroll-line{width:1px;height:40px;background:linear-gradient(180deg,var(--accent),transparent);animation:scrollBob 2s ease-in-out infinite}
+@keyframes scrollBob{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.6)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .step-header{flex-direction:column;gap:16px}
+  .author-card{flex-direction:column;text-align:center}
+  .author-info{text-align:center}
+  .author-contacts{justify-content:center}
+  .steps-nav{gap:6px}
+  .step-pill{font-size:0.72rem;padding:6px 10px}
+}
+
+/* ── GLOWING LINE ── */
+.glow-line{
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  margin:60px 0;
+  position:relative;
+}
+.glow-line::after{
+  content:'';position:absolute;
+  inset:-4px 20%;
+  background:linear-gradient(90deg,transparent,rgba(0,229,255,0.3),transparent);
+  filter:blur(6px);
+}
+
+/* ── TABS ── */
+.tab-group{margin:24px 0}
+.tab-headers{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0}
+.tab-btn{
+  padding:12px 22px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;
+  color:var(--muted);
+  background:transparent;
+  border:none;
+  border-bottom:2px solid transparent;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-bottom:-1px;
+}
+.tab-btn.active,.tab-btn:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none;padding:24px 0}
+.tab-content.active{display:block}
+
+/* ── COLUMNS ── */
+.cols-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:700px){.cols-2{grid-template-columns:1fr}}
+
+/* ── BIG NUMBER ── */
+.big-stat{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px 20px;
+  text-align:center;
+}
+.big-stat .num{
+  font-size:3rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.big-stat .label{font-size:0.8rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:6px}
+
+/* ── STICKY SECTION INDICATOR ── */
+.section-indicator{
+  position:fixed;top:50%;right:24px;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:8px;
+  z-index:100;
+}
+.si-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--border);
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.si-dot.active,.si-dot:hover{background:var(--accent);box-shadow:0 0 8px rgba(0,229,255,0.5)}
+
+@media(max-width:900px){.section-indicator{display:none}}
+</style>
+</head>
+<body>
+
+<!-- SECTION DOTS NAV -->
+<div class="section-indicator">
+  <div class="si-dot active" onclick="scrollToSection(0)" title="Intro"></div>
+  <div class="si-dot" onclick="scrollToSection(1)" title="Overview"></div>
+  <div class="si-dot" onclick="scrollToSection(2)" title="Step 1"></div>
+  <div class="si-dot" onclick="scrollToSection(3)" title="Step 2"></div>
+  <div class="si-dot" onclick="scrollToSection(4)" title="Step 3 - UI"></div>
+  <div class="si-dot" onclick="scrollToSection(5)" title="Step 4 - Backend"></div>
+  <div class="si-dot" onclick="scrollToSection(6)" title="Step 5 - DB"></div>
+  <div class="si-dot" onclick="scrollToSection(7)" title="Step 6 - Testing"></div>
+  <div class="si-dot" onclick="scrollToSection(8)" title="Step 7 - Mobile"></div>
+  <div class="si-dot" onclick="scrollToSection(9)" title="Deployment"></div>
+</div>
+
+<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
+<header id="sec-0">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="badge">⬡ FULL-STACK AI DEVELOPMENT PLAYBOOK</div>
+
+  <h1><span class="gradient-text">E2E Production-Ready</span><br>Development Guide</h1>
+  <p class="subtitle">A complete step-by-step framework to build scalable web & mobile apps — from requirement gathering to live deployment — with AI-powered tooling.</p>
+
+  <div class="author-card">
+    <div class="avatar">MF</div>
+    <div class="author-info">
+      <h3>M.H.M. FASKATH</h3>
+      <p>AI Automation Engineer Intern &nbsp;|&nbsp; IT Undergraduate @ University of Moratuwa</p>
+      <div class="author-contacts">
+        <a href="mailto:faskath9054@gmail.com" class="contact-chip">✉ faskath9054@gmail.com</a>
+        <a href="tel:+94757507441" class="contact-chip">📞 +94 757 507 441</a>
+        <span class="contact-chip">🎓 University of Moratuwa</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps-nav" style="margin-top:40px">
+    <a class="step-pill" href="#sec-1"><span class="num">1</span> Requirements</a>
+    <a class="step-pill" href="#sec-2"><span class="num">2</span> Tech Stack</a>
+    <a class="step-pill" href="#sec-3"><span class="num">3</span> Frontend UI</a>
+    <a class="step-pill" href="#sec-4"><span class="num">4</span> Backend</a>
+    <a class="step-pill" href="#sec-5"><span class="num">5</span> Database</a>
+    <a class="step-pill" href="#sec-6"><span class="num">6</span> Testing</a>
+    <a class="step-pill" href="#sec-7"><span class="num">7</span> Mobile App</a>
+    <a class="step-pill" href="#sec-8"><span class="num">8</span> Deploy</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════ OVERVIEW ════════════════════════════════ -->
+<section id="sec-1">
+<div class="wrap">
+  <div class="section-label">OVERVIEW</div>
+  <div class="section-title">9-Phase Development<br><span class="gradient-text">Workflow</span></div>
+  <p class="section-desc">Follow this strict, battle-tested workflow to build any production-grade full-stack application. Each phase must be completed before moving to the next.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:48px">
+    <div class="big-stat"><span class="num">9</span><span class="label">PHASES</span></div>
+    <div class="big-stat"><span class="num">3</span><span class="label">PLATFORMS</span></div>
+    <div class="big-stat"><span class="num">100%</span><span class="label">MODULAR</span></div>
+    <div class="big-stat"><span class="num">E2E</span><span class="label">COVERED</span></div>
+  </div>
+
+  <div class="phase-grid">
+    <div class="phase-card">
+      <div class="phase-num">PHASE 01</div>
+      <h3>📋 Requirement Gathering</h3>
+      <p>Structured questions → PRD document → Feature breakdown → Development phases. Never skip this step.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">PRD</span>
+        <span class="tag green">MVP First</span>
+        <span class="tag purple">Modules</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 02</div>
+      <h3>⚙️ Tech Stack Selection</h3>
+      <p>Choose the best tools based on requirements. Every decision is justified with clear reasoning.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">Next.js</span>
+        <span class="tag purple">NestJS</span>
+        <span class="tag green">PostgreSQL</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 03</div>
+      <h3>🎨 Frontend UI Generation</h3>
+      <p>Generate AI-powered UI with Lovable. Push to GitHub, run locally with Antigravity.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">Lovable</span>
+        <span class="tag amber">Figma</span>
+        <span class="tag green">Tailwind</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 04</div>
+      <h3>🔧 Backend Development</h3>
+      <p>Auth first, then modules one by one. RBAC, JWT, REST APIs, documented endpoints.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">NestJS</span>
+        <span class="tag purple">JWT</span>
+        <span class="tag green">RBAC</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 05</div>
+      <h3>🗄️ Database Setup</h3>
+      <p>Schema design, relationships, seed data. Compass for MongoDB, pgAdmin for PostgreSQL.</p>
+      <div class="phase-tags">
+        <span class="tag green">Schema</span>
+        <span class="tag cyan">Relations</span>
+        <span class="tag amber">Seed Data</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 06</div>
+      <h3>🧪 Testing</h3>
+      <p>After every feature: Postman API tests, UI tests, edge case validation, error handling checks.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">Postman</span>
+        <span class="tag purple">Jest</span>
+        <span class="tag green">E2E</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 07</div>
+      <h3>📱 Mobile App</h3>
+      <p>React Native (Expo) app connecting to the same backend APIs. Auth, core features, responsive UI.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">React Native</span>
+        <span class="tag purple">Expo</span>
+        <span class="tag green">Zustand</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 08</div>
+      <h3>🚀 Iterative Dev</h3>
+      <p>One feature at a time, tested and merged before proceeding. Clean, modular, scalable code.</p>
+      <div class="phase-tags">
+        <span class="tag cyan">Git Flow</span>
+        <span class="tag purple">CI/CD</span>
+        <span class="tag amber">Modular</span>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">PHASE 09</div>
+      <h3>☁️ Deployment</h3>
+      <p>Deploy frontend on Vercel, backend on Railway/Render, mobile via Expo EAS Build.</p>
+      <div class="phase-tags">
+        <span class="tag green">Vercel</span>
+        <span class="tag cyan">Railway</span>
+        <span class="tag purple">EAS</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 1 ════════════════════════════════ -->
+<section id="sec-2">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">01</div>
+    <div class="step-meta">
+      <h2>Requirement Gathering & PRD</h2>
+      <p>Before writing a single line of code, collect all requirements using structured questions. Convert them into a Product Requirement Document (PRD) that guides the entire build.</p>
+    </div>
+  </div>
+
+  <!-- GPT PROMPT: REQUIREMENTS -->
+  <div class="section-label" style="margin-bottom:20px">GPT PROMPT — REQUIREMENTS GATHERING</div>
+
+  <div class="prompt-box">
+    <div class="prompt-label">ChatGPT / Claude — Requirement Gathering Prompt</div>
+    <p>You are a senior software architect. I need you to help me define a complete PRD for my project. Ask me ALL of the following structured questions and wait for my answers before proceeding:</p>
+    <ol>
+      <li><strong>Project Idea:</strong> What does this application do? What problem does it solve?</li>
+      <li><strong>Target Users:</strong> Who will use it? (age group, technical level, geography)</li>
+      <li><strong>Core Features (MVP):</strong> List the minimum features needed to launch.</li>
+      <li><strong>Authentication:</strong> Do you need login/signup? Yes or No?</li>
+      <li><strong>Roles:</strong> Do different users have different permissions? (Admin, User, Vendor, etc.)</li>
+      <li><strong>Platforms:</strong> Web app? Mobile app? Or both?</li>
+      <li><strong>Tech Preferences:</strong> Any preferred frameworks or languages?</li>
+      <li><strong>Scale:</strong> Expected users at launch vs 12 months? (Small / Medium / Enterprise)</li>
+      <li><strong>Integrations:</strong> Any 3rd party services? (Stripe, WhatsApp, Google Maps, SMS)</li>
+      <li><strong>UI Style:</strong> Modern SaaS / Marketplace / Dashboard / Minimal / Other?</li>
+      <li><strong>Database:</strong> MongoDB (flexible) or PostgreSQL (relational)?</li>
+    </ol>
+    <div class="divider"></div>
+    <p>After I answer, generate a complete <strong>PRD document</strong> with: Project Overview, User Personas, Feature List (grouped by priority), Module Breakdown, and a 4-phase Development Roadmap.</p>
+  </div>
+
+  <div class="alert info">
+    <span class="alert-icon">ℹ️</span>
+    <p><strong>Pro Tip:</strong> Paste this prompt into ChatGPT-4 or Claude. Answer each question thoroughly. The better your answers, the more precise your PRD and feature breakdown will be. Save the PRD as <code>PRD.md</code> in your project root.</p>
+  </div>
+
+  <!-- PRD STRUCTURE -->
+  <div class="section-label" style="margin:32px 0 16px">SAMPLE PRD OUTPUT STRUCTURE</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>PRD.md</span><span class="lang">MARKDOWN</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="c"># Product Requirement Document (PRD)</span>
+
+<span class="v">## 1. Project Overview</span>
+<span class="p">- Project Name: [Your App Name]</span>
+<span class="p">- Version: 1.0.0 MVP</span>
+<span class="p">- Author: M.H.M. Faskath | faskath9054@gmail.com</span>
+<span class="p">- Date: [Today's Date]</span>
+
+<span class="v">## 2. Problem Statement</span>
+<span class="p">[Describe the problem in 2-3 sentences]</span>
+
+<span class="v">## 3. Target Users / Personas</span>
+<span class="p">- Persona 1: [Name, Role, Goals, Pain Points]</span>
+<span class="p">- Persona 2: [Name, Role, Goals, Pain Points]</span>
+
+<span class="v">## 4. Core Features (MVP)</span>
+<span class="p">### Priority 1 — Must Have</span>
+<span class="p">- [ ] User Authentication (Register / Login / Logout)</span>
+<span class="p">- [ ] Dashboard</span>
+<span class="p">- [ ] [Core Feature 1]</span>
+
+<span class="p">### Priority 2 — Should Have</span>
+<span class="p">- [ ] [Feature 2]</span>
+
+<span class="p">### Priority 3 — Nice to Have</span>
+<span class="p">- [ ] [Feature 3]</span>
+
+<span class="v">## 5. Technical Modules</span>
+<span class="p">| Module       | Type     | Description               |</span>
+<span class="p">|--------------|----------|---------------------------|</span>
+<span class="p">| Auth         | Backend  | JWT + RBAC                |</span>
+<span class="p">| User Profile | Full     | CRUD + Avatar upload      |</span>
+
+<span class="v">## 6. Development Phases</span>
+<span class="p">- Phase 1: Setup + Auth (Week 1-2)</span>
+<span class="p">- Phase 2: Core Features (Week 3-5)</span>
+<span class="p">- Phase 3: Mobile App (Week 6-7)</span>
+<span class="p">- Phase 4: Testing + Deploy (Week 8)</span></code></div>
+  </div>
+
+  <ul class="checklist" style="margin-top:24px">
+    <li><strong>Ask all 11 questions</strong> before writing any code</li>
+    <li><strong>Save PRD.md</strong> to your project root — this is your source of truth</li>
+    <li><strong>Define MVP clearly</strong> — avoid scope creep in early stages</li>
+    <li><strong>List all modules</strong> with type (Frontend / Backend / Full-stack)</li>
+    <li><strong>Plan 4 development phases</strong> with rough time estimates</li>
+  </ul>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 2 ════════════════════════════════ -->
+<section id="sec-3">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">02</div>
+    <div class="step-meta">
+      <h2>Tech Stack Selection</h2>
+      <p>Every tool must be chosen deliberately. Below is the recommended production-ready stack with justifications for each choice.</p>
+    </div>
+  </div>
+
+  <div class="stack-grid">
+    <div class="stack-item">
+      <div class="stack-icon">⚛️</div>
+      <h4>Next.js 14 (App Router)</h4>
+      <p>React framework with SSR, SSG, file-based routing and API routes built in.</p>
+      <div class="why">→ SEO + performance + full-stack in one</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🎨</div>
+      <h4>Tailwind CSS</h4>
+      <p>Utility-first CSS framework. Consistent design, zero CSS file bloat, rapid UI development.</p>
+      <div class="why">→ 10x faster styling than vanilla CSS</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🏗️</div>
+      <h4>NestJS (Node.js)</h4>
+      <p>Enterprise-grade Node.js framework. Modular, TypeScript-first, built-in DI container.</p>
+      <div class="why">→ Scalable + type-safe backend</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🗄️</div>
+      <h4>PostgreSQL + Prisma</h4>
+      <p>Relational DB with ACID compliance. Prisma ORM for type-safe database queries.</p>
+      <div class="why">→ Reliable relations + auto-generated types</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🔐</div>
+      <h4>JWT + Passport.js</h4>
+      <p>Stateless auth with access/refresh tokens. Passport strategies for Google OAuth support.</p>
+      <div class="why">→ Secure, scalable authentication</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">📱</div>
+      <h4>React Native (Expo)</h4>
+      <p>Cross-platform iOS + Android from one codebase. Expo SDK for camera, push, maps and more.</p>
+      <div class="why">→ Same JS knowledge, 2 platforms</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🔄</div>
+      <h4>Zustand / React Query</h4>
+      <p>Lightweight global state (Zustand) + server state caching and sync (TanStack Query).</p>
+      <div class="why">→ No Redux boilerplate</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🚀</div>
+      <h4>Vercel + Railway</h4>
+      <p>Frontend on Vercel (zero-config Next.js). Backend + DB on Railway (auto scaling).</p>
+      <div class="why">→ Deploy in minutes</div>
+    </div>
+  </div>
+
+  <div class="alert success" style="margin-top:32px">
+    <span class="alert-icon">✅</span>
+    <p><strong>Stack Decision Rule:</strong> Match complexity to project size. For a startup MVP, this stack handles up to 100K MAU. For enterprise scale, swap Postgres for CockroachDB and NestJS for microservices.</p>
+  </div>
+
+  <!-- FOLDER STRUCTURE -->
+  <div class="section-label" style="margin:32px 0 16px">PROJECT FOLDER STRUCTURE</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>Project Root</span><span class="lang">TREE</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="c">my-project/</span>
+<span class="p">├── 📁 frontend/           </span><span class="c">   # Next.js 14 App</span>
+<span class="p">│   ├── app/               </span><span class="c">   # App Router pages</span>
+<span class="p">│   │   ├── (auth)/        </span><span class="c">   # Login, Register routes</span>
+<span class="p">│   │   ├── dashboard/     </span><span class="c">   # Protected dashboard</span>
+<span class="p">│   │   └── layout.tsx</span>
+<span class="p">│   ├── components/        </span><span class="c">   # Reusable UI components</span>
+<span class="p">│   ├── lib/               </span><span class="c">   # API client, utils</span>
+<span class="p">│   ├── store/             </span><span class="c">   # Zustand stores</span>
+<span class="p">│   └── tailwind.config.ts</span>
+<span class="p">│</span>
+<span class="p">├── 📁 backend/            </span><span class="c">   # NestJS API</span>
+<span class="p">│   ├── src/</span>
+<span class="p">│   │   ├── auth/          </span><span class="c">   # JWT auth module</span>
+<span class="p">│   │   ├── users/         </span><span class="c">   # User CRUD module</span>
+<span class="p">│   │   ├── [feature]/     </span><span class="c">   # Feature modules</span>
+<span class="p">│   │   ├── prisma/        </span><span class="c">   # DB client</span>
+<span class="p">│   │   └── main.ts</span>
+<span class="p">│   ├── prisma/</span>
+<span class="p">│   │   └── schema.prisma  </span><span class="c">   # Database schema</span>
+<span class="p">│   └── .env</span>
+<span class="p">│</span>
+<span class="p">├── 📁 mobile/             </span><span class="c">   # React Native Expo</span>
+<span class="p">│   ├── app/               </span><span class="c">   # Expo Router pages</span>
+<span class="p">│   ├── components/</span>
+<span class="p">│   ├── services/          </span><span class="c">   # API calls</span>
+<span class="p">│   └── store/</span>
+<span class="p">│</span>
+<span class="p">├── PRD.md</span>
+<span class="p">└── README.md</span></code></div>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 3 — FRONTEND ════════════════════════════════ -->
+<section id="sec-4">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">03</div>
+    <div class="step-meta">
+      <h2>Frontend UI Generation</h2>
+      <p>Use AI-powered tools to generate high-quality UI. Copy the prompt below into <strong>Lovable.dev</strong>, generate, export, and run locally.</p>
+    </div>
+  </div>
+
+  <!-- LOVABLE PROMPT -->
+  <div class="section-label" style="margin-bottom:16px">LOVABLE PROMPT — UI GENERATION</div>
+
+  <div class="prompt-box">
+    <div class="prompt-label">Lovable.dev — Full App UI Prompt Template</div>
+    <p>Build a complete <strong>modern SaaS web application</strong> UI with the following specifications:</p>
+    <div class="divider"></div>
+    <p><strong>🎨 Design System:</strong></p>
+    <ul>
+      <li>Color palette: Dark mode primary (#0f172a bg), Cyan accent (#00e5ff), Purple secondary (#7c3aed)</li>
+      <li>Typography: Display font for headings (bold, tight tracking), Clean sans for body</li>
+      <li>Border radius: 12px cards, 8px inputs, pill buttons</li>
+      <li>Spacing: 8px grid system, generous whitespace</li>
+      <li>Subtle glowing effects on cards and CTAs</li>
+    </ul>
+    <div class="divider"></div>
+    <p><strong>📄 Pages to Generate:</strong></p>
+    <ul>
+      <li><strong>Landing Page</strong> — Hero section, Features grid, Pricing, CTA, Footer</li>
+      <li><strong>Auth Pages</strong> — Login (email+password, Google OAuth button), Register with validation, Forgot Password</li>
+      <li><strong>Dashboard</strong> — Sidebar nav, Stats cards (4 KPIs), Recent activity table, Quick actions</li>
+      <li><strong>Profile Page</strong> — Avatar upload, Edit form, Security settings</li>
+      <li><strong>Settings Page</strong> — Tabs: General / Notifications / Billing / Team</li>
+      <li><strong>[ADD YOUR FEATURE PAGE]</strong> — List view with filters, Detail view, Create/Edit modal</li>
+    </ul>
+    <div class="divider"></div>
+    <p><strong>🧩 Shared Components:</strong></p>
+    <ul>
+      <li>Navbar with logo, nav links, user avatar dropdown, notifications bell</li>
+      <li>Sidebar (collapsible on mobile) with icon + label nav items</li>
+      <li>Data table with sort, filter, pagination, row actions</li>
+      <li>Modal / Sheet components for forms</li>
+      <li>Toast notification system</li>
+      <li>Loading skeletons for all data-heavy sections</li>
+      <li>Empty states with illustrations</li>
+      <li>Responsive mobile breakpoints (320px to 1440px)</li>
+    </ul>
+    <div class="divider"></div>
+    <p><strong>⚙️ Tech Stack:</strong> Next.js 14, TypeScript, Tailwind CSS, shadcn/ui components, React Hook Form for all forms, Lucide icons. Ensure all forms have proper validation states (error, success, loading).</p>
+  </div>
+
+  <!-- TOOL CARDS -->
+  <div class="tool-row">
+    <div class="tool-card">
+      <div class="icon">🎨</div>
+      <h4>Lovable.dev</h4>
+      <p>AI UI generator. Paste the prompt, click Generate, export as Next.js code.</p>
+      <a href="https://lovable.dev" target="_blank">Open Lovable →</a>
+    </div>
+    <div class="tool-card">
+      <div class="icon">⚡</div>
+      <h4>v0 by Vercel</h4>
+      <p>Alternative AI UI tool. Great for individual component generation with shadcn/ui.</p>
+      <a href="https://v0.dev" target="_blank">Open v0 →</a>
+    </div>
+    <div class="tool-card">
+      <div class="icon">🛠️</div>
+      <h4>Antigravity</h4>
+      <p>Run your exported frontend code directly in-browser. No local setup required.</p>
+      <a href="https://antigravity.dev" target="_blank">Open Antigravity →</a>
+    </div>
+    <div class="tool-card">
+      <div class="icon">🐙</div>
+      <h4>GitHub</h4>
+      <p>Version control. Push Lovable export, clone locally, work with branches.</p>
+      <a href="https://github.com" target="_blank">Open GitHub →</a>
+    </div>
+  </div>
+
+  <!-- BASH COMMANDS -->
+  <div class="section-label" style="margin:36px 0 16px">BASH COMMANDS — FRONTEND SETUP</div>
+
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>Terminal</span><span class="lang">BASH</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="c"># ── OPTION A: Start fresh with Next.js ──────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx create-next-app@latest my-app --typescript --tailwind --app</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cd my-app</span></div>
+
+<span class="c"># ── Install core dependencies ────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install @tanstack/react-query zustand axios</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install react-hook-form @hookform/resolvers zod</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install lucide-react class-variance-authority clsx</span></div>
+
+<span class="c"># ── Install shadcn/ui ─────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx shadcn@latest init</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx shadcn@latest add button input card table dialog toast</span></div>
+
+<span class="c"># ── OPTION B: Clone from Lovable export (GitHub) ─────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cd YOUR_REPO</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install</span></div>
+
+<span class="c"># ── Environment variables ─────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cp .env.example .env.local</span></div>
+<span class="c"># Edit .env.local: NEXT_PUBLIC_API_URL=http://localhost:3001</span>
+
+<span class="c"># ── Run dev server ────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm run dev</span></div>
+<span class="c"># ✅ Open http://localhost:3000</span>
+
+<span class="c"># ── Build for production ──────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm run build && npm start</span></div></code></div>
+  </div>
+
+  <div class="alert warn">
+    <span class="alert-icon">⚠️</span>
+    <p><strong>Important:</strong> Do NOT start backend development until the frontend is running at <code>localhost:3000</code> without errors. Screenshot all pages and attach to your PRD for reference.</p>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 4 — BACKEND ════════════════════════════════ -->
+<section id="sec-5">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">04</div>
+    <div class="step-meta">
+      <h2>Backend Development</h2>
+      <p>Build the API in strict order: Setup → DB → Auth → User Module → Feature Modules. Authentication MUST come first — never skip it.</p>
+    </div>
+  </div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="section-label" style="margin-bottom:20px">BUILD ORDER</div>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-icon">📦</div>
+      <div class="flow-text"><h4>1. Project Setup</h4><p>NestJS scaffold, dependencies, folder structure, .env config</p></div>
+    </div>
+    <div class="flow-arrow"></div>
+    <div class="flow-item">
+      <div class="flow-icon">🗄️</div>
+      <div class="flow-text"><h4>2. Database Connection</h4><p>Prisma schema, migrations, seed data</p></div>
+    </div>
+    <div class="flow-arrow"></div>
+    <div class="flow-item">
+      <div class="flow-icon">🔐</div>
+      <div class="flow-text"><h4>3. Authentication (MANDATORY FIRST)</h4><p>JWT access + refresh tokens, bcrypt hashing, Passport guards</p></div>
+    </div>
+    <div class="flow-arrow"></div>
+    <div class="flow-item">
+      <div class="flow-icon">👥</div>
+      <div class="flow-text"><h4>4. User Module</h4><p>CRUD endpoints, role assignment, profile management</p></div>
+    </div>
+    <div class="flow-arrow"></div>
+    <div class="flow-item">
+      <div class="flow-icon">⚙️</div>
+      <div class="flow-text"><h4>5. Feature Modules (one by one)</h4><p>Each feature: Controller → Service → Repository → Test</p></div>
+    </div>
+  </div>
+
+  <!-- BASH: BACKEND SETUP -->
+  <div class="section-label" style="margin:36px 0 16px">BASH COMMANDS — BACKEND SETUP</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>Terminal — Backend</span><span class="lang">BASH</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="c"># ── Install NestJS CLI ────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install -g @nestjs/cli</span></div>
+
+<span class="c"># ── Create project ────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">nest new backend --strict</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cd backend</span></div>
+
+<span class="c"># ── Core dependencies ─────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install @nestjs/config @nestjs/jwt @nestjs/passport</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install passport passport-jwt passport-local bcryptjs</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install @types/passport-jwt @types/bcryptjs -D</span></div>
+
+<span class="c"># ── Prisma ORM ────────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install prisma @prisma/client</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma init --datasource-provider postgresql</span></div>
+
+<span class="c"># ── Validation ────────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install class-validator class-transformer</span></div>
+
+<span class="c"># ── Generate modules (one per feature) ───────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">nest generate module auth</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">nest generate module users</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">nest generate module [feature-name]</span></div>
+
+<span class="c"># ── Run migrations ────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma migrate dev --name init</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma studio</span></div>
+<span class="c">  # ✅ Opens Prisma Studio at http://localhost:5555</span>
+
+<span class="c"># ── Start development server ──────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm run start:dev</span></div>
+<span class="c">  # ✅ API running at http://localhost:3001</span></code></div>
+  </div>
+
+  <!-- AUTH CODE -->
+  <div class="section-label" style="margin:32px 0 16px">AUTH MODULE — JWT IMPLEMENTATION</div>
+
+  <div class="tab-group">
+    <div class="tab-headers">
+      <button class="tab-btn active" onclick="switchTab(this,'tab-authmod')">auth.module.ts</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-authsvc')">auth.service.ts</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-jwtguard')">jwt.guard.ts</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-prismasc')">schema.prisma</button>
+    </div>
+
+    <div id="tab-authmod" class="tab-content active">
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>auth/auth.module.ts</span><span class="lang">TYPESCRIPT</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="k">import</span> <span class="p">{ Module }</span> <span class="k">from</span> <span class="s">'@nestjs/common'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ JwtModule }</span> <span class="k">from</span> <span class="s">'@nestjs/jwt'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ PassportModule }</span> <span class="k">from</span> <span class="s">'@nestjs/passport'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ ConfigModule, ConfigService }</span> <span class="k">from</span> <span class="s">'@nestjs/config'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ AuthService }</span> <span class="k">from</span> <span class="s">'./auth.service'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ AuthController }</span> <span class="k">from</span> <span class="s">'./auth.controller'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ JwtStrategy }</span> <span class="k">from</span> <span class="s">'./strategies/jwt.strategy'</span><span class="p">;</span>
+
+<span class="n">@Module</span><span class="p">({</span>
+  <span class="v">imports</span><span class="p">: [</span>
+    <span class="n">PassportModule</span><span class="p">,</span>
+    <span class="n">JwtModule</span><span class="p">.</span><span class="n">registerAsync</span><span class="p">({</span>
+      <span class="v">imports</span><span class="p">: [</span><span class="n">ConfigModule</span><span class="p">],</span>
+      <span class="v">useFactory</span><span class="p">: (</span><span class="v">config</span><span class="p">:</span> <span class="n">ConfigService</span><span class="p">) => ({</span>
+        <span class="v">secret</span><span class="p">:</span> <span class="v">config</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'JWT_SECRET'</span><span class="p">),</span>
+        <span class="v">signOptions</span><span class="p">: {</span> <span class="v">expiresIn</span><span class="p">:</span> <span class="s">'15m'</span> <span class="p">},</span>
+      <span class="p">}),</span>
+      <span class="v">inject</span><span class="p">: [</span><span class="n">ConfigService</span><span class="p">],</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="v">controllers</span><span class="p">: [</span><span class="n">AuthController</span><span class="p">],</span>
+  <span class="v">providers</span><span class="p">: [</span><span class="n">AuthService</span><span class="p">,</span> <span class="n">JwtStrategy</span><span class="p">],</span>
+  <span class="v">exports</span><span class="p">: [</span><span class="n">AuthService</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="k">export class</span> <span class="n">AuthModule</span> <span class="p">{}</span></code></div>
+      </div>
+    </div>
+
+    <div id="tab-authsvc" class="tab-content">
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>auth/auth.service.ts</span><span class="lang">TYPESCRIPT</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="k">import</span> <span class="p">{ Injectable, UnauthorizedException }</span> <span class="k">from</span> <span class="s">'@nestjs/common'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ JwtService }</span> <span class="k">from</span> <span class="s">'@nestjs/jwt'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ PrismaService }</span> <span class="k">from</span> <span class="s">'../prisma/prisma.service'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">*</span> <span class="k">as</span> <span class="v">bcrypt</span> <span class="k">from</span> <span class="s">'bcryptjs'</span><span class="p">;</span>
+
+<span class="n">@Injectable</span><span class="p">()</span>
+<span class="k">export class</span> <span class="n">AuthService</span> <span class="p">{</span>
+  <span class="k">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="v">prisma</span><span class="p">:</span> <span class="n">PrismaService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="v">jwt</span><span class="p">:</span> <span class="n">JwtService</span><span class="p">,</span>
+  <span class="p">) {}</span>
+
+  <span class="k">async</span> <span class="n">register</span><span class="p">(</span><span class="v">dto</span><span class="p">:</span> <span class="n">RegisterDto</span><span class="p">) {</span>
+    <span class="k">const</span> <span class="v">hash</span> <span class="p">=</span> <span class="k">await</span> <span class="v">bcrypt</span><span class="p">.</span><span class="n">hash</span><span class="p">(</span><span class="v">dto</span><span class="p">.</span><span class="v">password</span><span class="p">,</span> <span class="p">12);</span>
+    <span class="k">const</span> <span class="v">user</span> <span class="p">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="v">prisma</span><span class="p">.</span><span class="v">user</span><span class="p">.</span><span class="n">create</span><span class="p">({</span>
+      <span class="v">data</span><span class="p">: {</span> <span class="p">...</span><span class="v">dto</span><span class="p">,</span> <span class="v">password</span><span class="p">:</span> <span class="v">hash</span> <span class="p">},</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">signTokens</span><span class="p">(</span><span class="v">user</span><span class="p">.</span><span class="v">id</span><span class="p">,</span> <span class="v">user</span><span class="p">.</span><span class="v">email</span><span class="p">,</span> <span class="v">user</span><span class="p">.</span><span class="v">role</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="n">login</span><span class="p">(</span><span class="v">dto</span><span class="p">:</span> <span class="n">LoginDto</span><span class="p">) {</span>
+    <span class="k">const</span> <span class="v">user</span> <span class="p">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="v">prisma</span><span class="p">.</span><span class="v">user</span><span class="p">.</span><span class="n">findUnique</span><span class="p">({</span>
+      <span class="v">where</span><span class="p">: {</span> <span class="v">email</span><span class="p">:</span> <span class="v">dto</span><span class="p">.</span><span class="v">email</span> <span class="p">},</span>
+    <span class="p">});</span>
+    <span class="k">if</span> <span class="p">(!</span><span class="v">user</span><span class="p">)</span> <span class="k">throw new</span> <span class="n">UnauthorizedException</span><span class="p">(</span><span class="s">'Invalid credentials'</span><span class="p">);</span>
+    <span class="k">const</span> <span class="v">valid</span> <span class="p">=</span> <span class="k">await</span> <span class="v">bcrypt</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="v">dto</span><span class="p">.</span><span class="v">password</span><span class="p">,</span> <span class="v">user</span><span class="p">.</span><span class="v">password</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(!</span><span class="v">valid</span><span class="p">)</span> <span class="k">throw new</span> <span class="n">UnauthorizedException</span><span class="p">(</span><span class="s">'Invalid credentials'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">signTokens</span><span class="p">(</span><span class="v">user</span><span class="p">.</span><span class="v">id</span><span class="p">,</span> <span class="v">user</span><span class="p">.</span><span class="v">email</span><span class="p">,</span> <span class="v">user</span><span class="p">.</span><span class="v">role</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">private async</span> <span class="n">signTokens</span><span class="p">(</span><span class="v">userId</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="v">email</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="v">role</span><span class="p">:</span> <span class="n">string</span><span class="p">) {</span>
+    <span class="k">const</span> <span class="v">payload</span> <span class="p">= {</span> <span class="v">sub</span><span class="p">:</span> <span class="v">userId</span><span class="p">,</span> <span class="v">email</span><span class="p">,</span> <span class="v">role</span> <span class="p">};</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="v">accessToken</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="v">jwt</span><span class="p">.</span><span class="n">signAsync</span><span class="p">(</span><span class="v">payload</span><span class="p">),</span>
+      <span class="v">refreshToken</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="v">jwt</span><span class="p">.</span><span class="n">signAsync</span><span class="p">(</span><span class="v">payload</span><span class="p">, {</span> <span class="v">expiresIn</span><span class="p">:</span> <span class="s">'7d'</span> <span class="p">}),</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></div>
+      </div>
+    </div>
+
+    <div id="tab-jwtguard" class="tab-content">
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>guards/jwt.guard.ts + roles.guard.ts</span><span class="lang">TYPESCRIPT</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="c">// ── JWT Guard (protects routes) ──────────────────────────────────</span>
+<span class="k">import</span> <span class="p">{ AuthGuard }</span> <span class="k">from</span> <span class="s">'@nestjs/passport'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{ Injectable }</span> <span class="k">from</span> <span class="s">'@nestjs/common'</span><span class="p">;</span>
+
+<span class="n">@Injectable</span><span class="p">()</span>
+<span class="k">export class</span> <span class="n">JwtAuthGuard</span> <span class="k">extends</span> <span class="n">AuthGuard</span><span class="p">(</span><span class="s">'jwt'</span><span class="p">) {}</span>
+
+<span class="c">// ── Roles Decorator ──────────────────────────────────────────────</span>
+<span class="k">import</span> <span class="p">{ SetMetadata }</span> <span class="k">from</span> <span class="s">'@nestjs/common'</span><span class="p">;</span>
+<span class="k">export const</span> <span class="n">Roles</span> <span class="p">=</span> <span class="p">(...</span><span class="v">roles</span><span class="p">:</span> <span class="n">string</span><span class="p">[])</span> <span class="p">=></span>
+  <span class="n">SetMetadata</span><span class="p">(</span><span class="s">'roles'</span><span class="p">,</span> <span class="v">roles</span><span class="p">);</span>
+
+<span class="c">// ── Roles Guard (RBAC) ───────────────────────────────────────────</span>
+<span class="n">@Injectable</span><span class="p">()</span>
+<span class="k">export class</span> <span class="n">RolesGuard</span> <span class="k">implements</span> <span class="n">CanActivate</span> <span class="p">{</span>
+  <span class="k">constructor</span><span class="p">(</span><span class="k">private</span> <span class="v">reflector</span><span class="p">:</span> <span class="n">Reflector</span><span class="p">) {}</span>
+
+  <span class="n">canActivate</span><span class="p">(</span><span class="v">context</span><span class="p">:</span> <span class="n">ExecutionContext</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="v">roles</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="v">reflector</span><span class="p">.</span><span class="n">get</span><span class="p">&lt;</span><span class="n">string</span><span class="p">[]&gt;(</span><span class="s">'roles'</span><span class="p">,</span> <span class="v">context</span><span class="p">.</span><span class="n">getHandler</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(!</span><span class="v">roles</span><span class="p">)</span> <span class="k">return true</span><span class="p">;</span>
+    <span class="k">const</span> <span class="v">req</span> <span class="p">=</span> <span class="v">context</span><span class="p">.</span><span class="n">switchToHttp</span><span class="p">().</span><span class="n">getRequest</span><span class="p">();</span>
+    <span class="k">return</span> <span class="v">roles</span><span class="p">.</span><span class="n">includes</span><span class="p">(</span><span class="v">req</span><span class="p">.</span><span class="v">user</span><span class="p">.</span><span class="v">role</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">// ── Usage in Controller ──────────────────────────────────────────</span>
+<span class="n">@UseGuards</span><span class="p">(</span><span class="n">JwtAuthGuard</span><span class="p">,</span> <span class="n">RolesGuard</span><span class="p">)</span>
+<span class="n">@Roles</span><span class="p">(</span><span class="s">'admin'</span><span class="p">)</span>
+<span class="n">@Get</span><span class="p">(</span><span class="s">'admin-only'</span><span class="p">)</span>
+<span class="n">adminRoute</span><span class="p">() {</span> <span class="k">return</span> <span class="s">'Only admins here'</span><span class="p">; }</span></code></div>
+      </div>
+    </div>
+
+    <div id="tab-prismasc" class="tab-content">
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>prisma/schema.prisma</span><span class="lang">PRISMA</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="v">generator</span> client <span class="p">{</span>
+  <span class="v">provider</span> <span class="p">=</span> <span class="s">"prisma-client-js"</span>
+<span class="p">}</span>
+
+<span class="v">datasource</span> db <span class="p">{</span>
+  <span class="v">provider</span> <span class="p">=</span> <span class="s">"postgresql"</span>
+  <span class="v">url</span>      <span class="p">=</span> <span class="n">env</span><span class="p">(</span><span class="s">"DATABASE_URL"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="v">enum</span> Role <span class="p">{</span>
+  USER
+  ADMIN
+  VENDOR
+<span class="p">}</span>
+
+<span class="v">model</span> User <span class="p">{</span>
+  <span class="v">id</span>        <span class="n">String</span>   <span class="n">@id</span> <span class="n">@default</span><span class="p">(</span>uuid<span class="p">())</span>
+  <span class="v">email</span>     <span class="n">String</span>   <span class="n">@unique</span>
+  <span class="v">name</span>      <span class="n">String</span>
+  <span class="v">password</span>  <span class="n">String</span>
+  <span class="v">role</span>      Role     <span class="n">@default</span><span class="p">(</span>USER<span class="p">)</span>
+  <span class="v">avatar</span>    <span class="n">String</span><span class="p">?</span>
+  <span class="v">createdAt</span> <span class="n">DateTime</span> <span class="n">@default</span><span class="p">(</span>now<span class="p">())</span>
+  <span class="v">updatedAt</span> <span class="n">DateTime</span> <span class="n">@updatedAt</span>
+  <span class="v">posts</span>     Post<span class="p">[]</span>
+<span class="p">}</span>
+
+<span class="v">model</span> Post <span class="p">{</span>
+  <span class="v">id</span>        <span class="n">String</span>   <span class="n">@id</span> <span class="n">@default</span><span class="p">(</span>uuid<span class="p">())</span>
+  <span class="v">title</span>     <span class="n">String</span>
+  <span class="v">content</span>   <span class="n">String</span><span class="p">?</span>
+  <span class="v">published</span> <span class="n">Boolean</span>  <span class="n">@default</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
+  <span class="v">author</span>    User     <span class="n">@relation</span><span class="p">(</span>fields: <span class="p">[</span>authorId<span class="p">],</span> references: <span class="p">[</span>id<span class="p">])</span>
+  <span class="v">authorId</span>  <span class="n">String</span>
+  <span class="v">createdAt</span> <span class="n">DateTime</span> <span class="n">@default</span><span class="p">(</span>now<span class="p">())</span>
+<span class="p">}</span></code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API ENDPOINTS TABLE -->
+  <div class="section-label" style="margin:32px 0 16px">API ENDPOINTS REFERENCE</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Route</th>
+          <th>Description</th>
+          <th>Auth</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="method post">POST</span></td><td class="route">/auth/register</td><td class="desc-cell">Register new user</td><td class="tag green" style="display:inline-block;border-radius:4px">Public</td></tr>
+        <tr><td><span class="method post">POST</span></td><td class="route">/auth/login</td><td class="desc-cell">Login, get JWT tokens</td><td class="tag green" style="display:inline-block;border-radius:4px">Public</td></tr>
+        <tr><td><span class="method post">POST</span></td><td class="route">/auth/refresh</td><td class="desc-cell">Refresh access token</td><td class="tag amber" style="display:inline-block;border-radius:4px">Refresh Token</td></tr>
+        <tr><td><span class="method get">GET</span></td><td class="route">/users/me</td><td class="desc-cell">Get current user profile</td><td class="tag cyan" style="display:inline-block;border-radius:4px">JWT</td></tr>
+        <tr><td><span class="method put">PUT</span></td><td class="route">/users/me</td><td class="desc-cell">Update current user</td><td class="tag cyan" style="display:inline-block;border-radius:4px">JWT</td></tr>
+        <tr><td><span class="method get">GET</span></td><td class="route">/users</td><td class="desc-cell">List all users (admin)</td><td class="tag red" style="display:inline-block;border-radius:4px">Admin</td></tr>
+        <tr><td><span class="method delete">DELETE</span></td><td class="route">/users/:id</td><td class="desc-cell">Delete user (admin)</td><td class="tag red" style="display:inline-block;border-radius:4px">Admin</td></tr>
+        <tr><td><span class="method get">GET</span></td><td class="route">/[feature]</td><td class="desc-cell">List feature items</td><td class="tag cyan" style="display:inline-block;border-radius:4px">JWT</td></tr>
+        <tr><td><span class="method post">POST</span></td><td class="route">/[feature]</td><td class="desc-cell">Create feature item</td><td class="tag cyan" style="display:inline-block;border-radius:4px">JWT</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 5 — DATABASE ════════════════════════════════ -->
+<section id="sec-6">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">05</div>
+    <div class="step-meta">
+      <h2>Database Setup</h2>
+      <p>Design schema first, then migrate. Use Prisma Studio or pgAdmin to inspect data. Always seed test data before testing endpoints.</p>
+    </div>
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="section-label" style="margin-bottom:16px">POSTGRESQL (RECOMMENDED)</div>
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>.env</span><span class="lang">ENV</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="c"># Local PostgreSQL</span>
+<span class="v">DATABASE_URL</span><span class="p">=</span><span class="s">"postgresql://postgres:password@localhost:5432/myapp"</span>
+
+<span class="c"># Railway / Neon (production)</span>
+<span class="v">DATABASE_URL</span><span class="p">=</span><span class="s">"postgresql://USER:PASS@HOST:PORT/DB"</span>
+
+<span class="v">JWT_SECRET</span><span class="p">=</span><span class="s">"super-secret-key-change-me-in-prod"</span>
+<span class="v">JWT_REFRESH_SECRET</span><span class="p">=</span><span class="s">"refresh-secret-key"</span>
+<span class="v">PORT</span><span class="p">=</span><span class="s">3001</span>
+<span class="v">FRONTEND_URL</span><span class="p">=</span><span class="s">"http://localhost:3000"</span></code></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="margin-bottom:16px">PRISMA MIGRATION COMMANDS</div>
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>Prisma CLI</span><span class="lang">BASH</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="c"># Run first migration</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma migrate dev --name init</span></div>
+
+<span class="c"># After schema changes</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma migrate dev --name add-feature</span></div>
+
+<span class="c"># Open visual DB browser</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma studio</span></div>
+
+<span class="c"># Seed the database</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma db seed</span></div>
+
+<span class="c"># Generate Prisma Client</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma generate</span></div>
+
+<span class="c"># Reset DB (dev only!)</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx prisma migrate reset</span></div></code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEED FILE -->
+  <div class="section-label" style="margin:32px 0 16px">DATABASE SEED FILE</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>prisma/seed.ts</span><span class="lang">TYPESCRIPT</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="k">import</span> <span class="p">{ PrismaClient }</span> <span class="k">from</span> <span class="s">'@prisma/client'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">*</span> <span class="k">as</span> <span class="v">bcrypt</span> <span class="k">from</span> <span class="s">'bcryptjs'</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="v">prisma</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PrismaClient</span><span class="p">();</span>
+
+<span class="k">async function</span> <span class="n">main</span><span class="p">() {</span>
+  <span class="c">// Create admin user</span>
+  <span class="k">await</span> <span class="v">prisma</span><span class="p">.</span><span class="v">user</span><span class="p">.</span><span class="n">upsert</span><span class="p">({</span>
+    <span class="v">where</span><span class="p">: {</span> <span class="v">email</span><span class="p">:</span> <span class="s">'admin@example.com'</span> <span class="p">},</span>
+    <span class="v">update</span><span class="p">: {},</span>
+    <span class="v">create</span><span class="p">: {</span>
+      <span class="v">email</span><span class="p">:</span> <span class="s">'admin@example.com'</span><span class="p">,</span>
+      <span class="v">name</span><span class="p">:</span> <span class="s">'Admin User'</span><span class="p">,</span>
+      <span class="v">password</span><span class="p">:</span> <span class="k">await</span> <span class="v">bcrypt</span><span class="p">.</span><span class="n">hash</span><span class="p">(</span><span class="s">'Admin@123'</span><span class="p">,</span> <span class="p">12),</span>
+      <span class="v">role</span><span class="p">:</span> <span class="s">'ADMIN'</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">});</span>
+  <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s">'✅ Admin user seeded'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">main</span><span class="p">().</span><span class="n">catch</span><span class="p">(</span><span class="n">console</span><span class="p">.</span><span class="v">error</span><span class="p">).</span><span class="k">finally</span><span class="p">(() =></span> <span class="v">prisma</span><span class="p">.</span><span class="n">$disconnect</span><span class="p">());</span></code></div>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 6 — TESTING ════════════════════════════════ -->
+<section id="sec-7">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">06</div>
+    <div class="step-meta">
+      <h2>Testing Strategy</h2>
+      <p>Test every feature before building the next one. Use Postman for API tests, Jest for unit tests, and Playwright for E2E UI tests.</p>
+    </div>
+  </div>
+
+  <!-- GPT PROMPT: POSTMAN -->
+  <div class="section-label" style="margin-bottom:16px">GPT PROMPT — POSTMAN TEST COLLECTION</div>
+  <div class="prompt-box">
+    <div class="prompt-label">ChatGPT — Postman Test Collection Generator</div>
+    <p>I have a NestJS REST API. Generate a complete <strong>Postman Collection JSON</strong> for the following endpoints:</p>
+    <ul>
+      <li>POST /auth/register — body: <strong>{ name, email, password }</strong></li>
+      <li>POST /auth/login — body: <strong>{ email, password }</strong> → returns accessToken</li>
+      <li>GET /users/me — Authorization: Bearer &#123;&#123;accessToken&#125;&#125;</li>
+      <li>PUT /users/me — body: <strong>{ name, avatar }</strong></li>
+      <li>[ADD YOUR FEATURE ENDPOINTS]</li>
+    </ul>
+    <div class="divider"></div>
+    <p>For each request:</p>
+    <ul>
+      <li>Include <strong>Pre-request scripts</strong> to set environment variables</li>
+      <li>Include <strong>Test scripts</strong> that assert: status code, response structure, field types</li>
+      <li>Add both <strong>happy path</strong> and <strong>error case</strong> variants (e.g. wrong password, missing fields)</li>
+      <li>Use environment variables: <strong>&#123;&#123;baseUrl&#125;&#125; = http://localhost:3001</strong></li>
+    </ul>
+    <p>Output: Valid <strong>Postman Collection v2.1 JSON</strong> ready to import.</p>
+  </div>
+
+  <!-- JEST TEST -->
+  <div class="section-label" style="margin:32px 0 16px">JEST UNIT TEST — AUTH SERVICE</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>auth/auth.service.spec.ts</span><span class="lang">TYPESCRIPT</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="k">describe</span><span class="p">(</span><span class="s">'AuthService'</span><span class="p">, () => {</span>
+  <span class="k">let</span> <span class="v">service</span><span class="p">:</span> <span class="n">AuthService</span><span class="p">;</span>
+
+  <span class="k">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">() => {</span>
+    <span class="k">const</span> <span class="v">module</span> <span class="p">=</span> <span class="k">await</span> <span class="n">Test</span><span class="p">.</span><span class="n">createTestingModule</span><span class="p">({</span>
+      <span class="v">providers</span><span class="p">: [</span><span class="n">AuthService</span><span class="p">, MockPrismaService, MockJwtService],</span>
+    <span class="p">}).</span><span class="n">compile</span><span class="p">();</span>
+    <span class="v">service</span> <span class="p">=</span> <span class="v">module</span><span class="p">.</span><span class="n">get</span><span class="p">&lt;</span><span class="n">AuthService</span><span class="p">&gt;(</span><span class="n">AuthService</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">it</span><span class="p">(</span><span class="s">'should register a user and return tokens'</span><span class="p">, </span><span class="k">async</span> <span class="p">() => {</span>
+    <span class="k">const</span> <span class="v">result</span> <span class="p">=</span> <span class="k">await</span> <span class="v">service</span><span class="p">.</span><span class="n">register</span><span class="p">({</span>
+      <span class="v">email</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+      <span class="v">password</span><span class="p">:</span> <span class="s">'Test@123'</span><span class="p">,</span>
+      <span class="v">name</span><span class="p">:</span> <span class="s">'Test User'</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="n">expect</span><span class="p">(</span><span class="v">result</span><span class="p">).</span><span class="n">toHaveProperty</span><span class="p">(</span><span class="s">'accessToken'</span><span class="p">);</span>
+    <span class="n">expect</span><span class="p">(</span><span class="v">result</span><span class="p">).</span><span class="n">toHaveProperty</span><span class="p">(</span><span class="s">'refreshToken'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">it</span><span class="p">(</span><span class="s">'should throw on invalid credentials'</span><span class="p">, </span><span class="k">async</span> <span class="p">() => {</span>
+    <span class="k">await</span> <span class="n">expect</span><span class="p">(</span>
+      <span class="v">service</span><span class="p">.</span><span class="n">login</span><span class="p">({</span> <span class="v">email</span><span class="p">:</span> <span class="s">'x@x.com'</span><span class="p">,</span> <span class="v">password</span><span class="p">:</span> <span class="s">'wrong'</span> <span class="p">})</span>
+    <span class="p">).</span><span class="n">rejects</span><span class="p">.</span><span class="n">toThrow</span><span class="p">(</span><span class="s">'Invalid credentials'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="c"># Run tests</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm run test</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm run test:cov</span><span class="line-comment">    # with coverage report</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm run test:e2e</span><span class="line-comment">    # end-to-end tests</span></div></code></div>
+  </div>
+
+  <ul class="checklist" style="margin-top:20px">
+    <li><strong>Test every endpoint</strong> before building the next feature</li>
+    <li><strong>Happy path + error cases</strong> for every API route</li>
+    <li><strong>Test RBAC</strong> — ensure admin routes reject regular users</li>
+    <li><strong>Test token expiry</strong> — access token 15min, refresh 7 days</li>
+    <li><strong>Run test:cov</strong> and aim for &gt;80% coverage on services</li>
+  </ul>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 7 — MOBILE ════════════════════════════════ -->
+<section id="sec-8">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">07</div>
+    <div class="step-meta">
+      <h2>Mobile App (React Native + Expo)</h2>
+      <p>Build the mobile app ONLY after the backend is stable. Reuse all API endpoints and business logic — just build a new native UI layer.</p>
+    </div>
+  </div>
+
+  <!-- LOVABLE MOBILE PROMPT -->
+  <div class="section-label" style="margin-bottom:16px">LOVABLE / GPT PROMPT — MOBILE APP UI</div>
+  <div class="prompt-box">
+    <div class="prompt-label">Lovable / ChatGPT — React Native Mobile App Prompt</div>
+    <p>Design a complete <strong>React Native (Expo) mobile application</strong> UI with the following screens and specifications:</p>
+    <div class="divider"></div>
+    <p><strong>📱 Screen List:</strong></p>
+    <ul>
+      <li><strong>Splash Screen</strong> — App logo, gradient background, auto-redirect after 2s</li>
+      <li><strong>Onboarding</strong> — 3-slide walkthrough with skip button</li>
+      <li><strong>Login Screen</strong> — Email + password, biometric login button, forgot password link</li>
+      <li><strong>Register Screen</strong> — Name, email, password, confirm password, terms checkbox</li>
+      <li><strong>Home/Dashboard</strong> — Top greeting, stats row, recent items list, FAB button</li>
+      <li><strong>Profile Screen</strong> — Avatar, name, stats, edit button, logout</li>
+      <li><strong>[Feature Screen]</strong> — FlatList with cards, pull-to-refresh, infinite scroll</li>
+      <li><strong>Settings</strong> — Toggle list for notifications, dark mode, account options</li>
+    </ul>
+    <div class="divider"></div>
+    <p><strong>⚙️ Tech:</strong> Expo SDK 51, React Navigation v6 (Stack + Bottom Tabs), NativeWind (Tailwind), Zustand for state, Axios for API, Expo SecureStore for JWT storage. Use <strong>dark theme</strong> matching the web app: #0f172a bg, #00e5ff accent.</p>
+  </div>
+
+  <!-- MOBILE BASH -->
+  <div class="section-label" style="margin:28px 0 16px">BASH COMMANDS — MOBILE SETUP</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>Terminal — Mobile</span><span class="lang">BASH</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="c"># ── Create Expo project ───────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx create-expo-app@latest mobile --template blank-typescript</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cd mobile</span></div>
+
+<span class="c"># ── Navigation ────────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install @react-navigation/native @react-navigation/stack</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install @react-navigation/bottom-tabs</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install react-native-screens react-native-safe-area-context</span></div>
+
+<span class="c"># ── State + API ───────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install zustand axios @tanstack/react-query</span></div>
+
+<span class="c"># ── Secure Storage (JWT) ──────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx expo install expo-secure-store</span></div>
+
+<span class="c"># ── NativeWind (Tailwind for RN) ──────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install nativewind tailwindcss</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx tailwindcss init</span></div>
+
+<span class="c"># ── Icons ─────────────────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx expo install @expo/vector-icons</span></div>
+
+<span class="c"># ── Start dev server ──────────────────────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npx expo start</span></div>
+<span class="c">  # Scan QR with Expo Go app on your phone
+  # Press 'i' for iOS simulator, 'a' for Android</span>
+
+<span class="c"># ── Build for production (EAS Build) ─────────────────────────────</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install -g eas-cli</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">eas login</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">eas build --platform android</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">eas build --platform ios</span></div></code></div>
+  </div>
+
+  <!-- API SERVICE MOBILE -->
+  <div class="section-label" style="margin:32px 0 16px">MOBILE API SERVICE</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>services/api.ts</span><span class="lang">TYPESCRIPT</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="k">import</span> <span class="v">axios</span> <span class="k">from</span> <span class="s">'axios'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">*</span> <span class="k">as</span> <span class="n">SecureStore</span> <span class="k">from</span> <span class="s">'expo-secure-store'</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="v">api</span> <span class="p">=</span> <span class="v">axios</span><span class="p">.</span><span class="n">create</span><span class="p">({</span>
+  <span class="v">baseURL</span><span class="p">:</span> <span class="s">'http://YOUR-BACKEND-URL:3001'</span><span class="p">,</span>
+  <span class="v">headers</span><span class="p">: {</span> <span class="s">'Content-Type'</span><span class="p">:</span> <span class="s">'application/json'</span> <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c">// Auto-attach JWT token to every request</span>
+<span class="v">api</span><span class="p">.</span><span class="v">interceptors</span><span class="p">.</span><span class="v">request</span><span class="p">.</span><span class="n">use</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="v">config</span><span class="p">) => {</span>
+  <span class="k">const</span> <span class="v">token</span> <span class="p">=</span> <span class="k">await</span> <span class="n">SecureStore</span><span class="p">.</span><span class="n">getItemAsync</span><span class="p">(</span><span class="s">'accessToken'</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="v">token</span><span class="p">)</span> <span class="v">config</span><span class="p">.</span><span class="v">headers</span><span class="p">.</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s">`Bearer ${token}`</span><span class="p">;</span>
+  <span class="k">return</span> <span class="v">config</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="k">export default</span> <span class="v">api</span><span class="p">;</span>
+
+<span class="c">// Auth API calls</span>
+<span class="k">export const</span> <span class="v">authAPI</span> <span class="p">= {</span>
+  <span class="n">login</span><span class="p">: (</span><span class="v">data</span><span class="p">:</span> <span class="n">LoginDto</span><span class="p">)</span> <span class="p">=></span> <span class="v">api</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">'/auth/login'</span><span class="p">,</span> <span class="v">data</span><span class="p">),</span>
+  <span class="n">register</span><span class="p">: (</span><span class="v">data</span><span class="p">:</span> <span class="n">RegisterDto</span><span class="p">)</span> <span class="p">=></span> <span class="v">api</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">'/auth/register'</span><span class="p">,</span> <span class="v">data</span><span class="p">),</span>
+  <span class="n">me</span><span class="p">: ()</span> <span class="p">=></span> <span class="v">api</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/users/me'</span><span class="p">),</span>
+<span class="p">};</span></code></div>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ STEP 8 — DEPLOY ════════════════════════════════ -->
+<section id="sec-9">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-num-big">08</div>
+    <div class="step-meta">
+      <h2>Deployment & CI/CD</h2>
+      <p>Deploy frontend to Vercel, backend to Railway, database to Neon/Supabase, mobile via EAS Build. Set up GitHub Actions for automated testing and deployment.</p>
+    </div>
+  </div>
+
+  <div class="cols-2">
+    <div>
+      <div class="section-label" style="margin-bottom:16px">VERCEL — FRONTEND DEPLOY</div>
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>Vercel CLI</span><span class="lang">BASH</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="c"># Install Vercel CLI</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install -g vercel</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cd frontend</span></div>
+
+<span class="c"># Deploy (follow prompts)</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">vercel</span></div>
+
+<span class="c"># Deploy production</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">vercel --prod</span></div>
+
+<span class="c"># Set env variable</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">vercel env add NEXT_PUBLIC_API_URL</span></div>
+<span class="c">  # Enter: https://your-backend.railway.app</span></code></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="margin-bottom:16px">RAILWAY — BACKEND DEPLOY</div>
+      <div class="code-section">
+        <div class="code-header">
+          <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+          <div class="code-title"><span>Railway CLI</span><span class="lang">BASH</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-body"><code><span class="c"># Install Railway CLI</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">npm install -g @railway/cli</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">railway login</span></div>
+
+<span class="c"># Init + deploy</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">cd backend</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">railway init</span></div>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">railway up</span></div>
+
+<span class="c"># Add PostgreSQL addon</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">railway add --plugin postgresql</span></div>
+
+<span class="c"># Set env vars</span>
+<div class="cmd-line"><span class="prompt">$</span><span class="cmd">railway variables set JWT_SECRET=your-secret</span></div></code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GITHUB ACTIONS -->
+  <div class="section-label" style="margin:32px 0 16px">GITHUB ACTIONS — CI/CD PIPELINE</div>
+  <div class="code-section">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      <div class="code-title"><span>.github/workflows/deploy.yml</span><span class="lang">YAML</span></div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <div class="code-body"><code><span class="v">name</span><span class="p">:</span> <span class="s">CI/CD Pipeline</span>
+
+<span class="v">on</span><span class="p">:</span>
+  <span class="v">push</span><span class="p">:</span>
+    <span class="v">branches</span><span class="p">: [</span><span class="s">main</span><span class="p">]</span>
+  <span class="v">pull_request</span><span class="p">:</span>
+    <span class="v">branches</span><span class="p">: [</span><span class="s">main</span><span class="p">]</span>
+
+<span class="v">jobs</span><span class="p">:</span>
+  <span class="v">test-backend</span><span class="p">:</span>
+    <span class="v">runs-on</span><span class="p">:</span> <span class="s">ubuntu-latest</span>
+    <span class="v">steps</span><span class="p">:</span>
+      <span class="p">-</span> <span class="k">uses</span><span class="p">:</span> <span class="s">actions/checkout@v4</span>
+      <span class="p">-</span> <span class="v">name</span><span class="p">:</span> <span class="s">Setup Node</span>
+        <span class="k">uses</span><span class="p">:</span> <span class="s">actions/setup-node@v4</span>
+        <span class="v">with</span><span class="p">: {</span> <span class="v">node-version</span><span class="p">:</span> <span class="s">'20'</span> <span class="p">}</span>
+      <span class="p">-</span> <span class="v">name</span><span class="p">:</span> <span class="s">Install & Test</span>
+        <span class="k">run</span><span class="p">: |</span>
+          <span class="v">cd backend</span>
+          <span class="v">npm ci</span>
+          <span class="v">npm run test:cov</span>
+
+  <span class="v">deploy-frontend</span><span class="p">:</span>
+    <span class="v">needs</span><span class="p">: [</span><span class="s">test-backend</span><span class="p">]</span>
+    <span class="v">runs-on</span><span class="p">:</span> <span class="s">ubuntu-latest</span>
+    <span class="v">steps</span><span class="p">:</span>
+      <span class="p">-</span> <span class="k">uses</span><span class="p">:</span> <span class="s">actions/checkout@v4</span>
+      <span class="p">-</span> <span class="v">name</span><span class="p">:</span> <span class="s">Deploy to Vercel</span>
+        <span class="k">uses</span><span class="p">:</span> <span class="s">amondnet/vercel-action@v25</span>
+        <span class="v">with</span><span class="p">:</span>
+          <span class="v">vercel-token</span><span class="p">:</span> <span class="s">$\{{ secrets.VERCEL_TOKEN }}</span>
+          <span class="v">vercel-org-id</span><span class="p">:</span>  <span class="s">$\{{ secrets.VERCEL_ORG_ID }}</span>
+          <span class="v">vercel-project-id</span><span class="p">:</span> <span class="s">$\{{ secrets.VERCEL_PROJECT_ID }}</span>
+          <span class="v">vercel-args</span><span class="p">:</span> <span class="s">'--prod'</span>
+          <span class="v">working-directory</span><span class="p">:</span> <span class="s">./frontend</span></code></div>
+  </div>
+
+  <!-- DEPLOYMENT TIMELINE -->
+  <div class="section-label" style="margin:32px 0 16px">DEPLOYMENT CHECKLIST</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>🔒 Secure all environment variables</h4>
+      <p>Move all secrets to Railway/Vercel env vars. Never commit .env to GitHub. Use strong JWT_SECRET (32+ chars random string).</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>🗄️ Run production migrations</h4>
+      <p>Run <code>npx prisma migrate deploy</code> (not dev) on your production database. Confirm all tables exist via pgAdmin or Prisma Studio.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>🌐 Configure CORS</h4>
+      <p>In NestJS main.ts: <code>app.enableCors({ origin: 'https://your-vercel-url.vercel.app' })</code>. Never use wildcard <code>*</code> in production.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>📱 EAS Build for mobile</h4>
+      <p>Update API baseURL in mobile/services/api.ts to production URL. Run <code>eas build --platform all</code> then submit to stores.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <h4>✅ Smoke test production</h4>
+      <p>Test register → login → dashboard on production URL. Check browser console for errors. Test on mobile device via Expo Go or production build.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ════════════════════════════════ FULL GPT MASTER PROMPT ════════════════════════════════ -->
+<section style="padding:80px 0">
+<div class="wrap">
+  <div class="section-label">BONUS</div>
+  <div class="section-title">Master <span class="gradient-text">GPT Prompt</span></div>
+  <p class="section-desc">Copy this one mega-prompt into ChatGPT-4 to generate your complete project plan, PRD, backend code, and API docs in one shot.</p>
+
+  <div class="prompt-box">
+    <div class="prompt-label">MASTER PROJECT PROMPT — For ChatGPT-4 / Claude</div>
+    <p>You are a <strong>senior full-stack software architect</strong>. I want to build a complete production-ready application. Follow this EXACT process:</p>
+    <div class="divider"></div>
+    <p><strong>STEP 1 — Ask me these questions first (wait for my answers):</strong></p>
+    <ol>
+      <li>What is the project? (1-2 sentence description)</li>
+      <li>Who are the users? (describe personas)</li>
+      <li>List your top 5 MVP features</li>
+      <li>Do you need authentication and role-based access?</li>
+      <li>Web only, mobile only, or both?</li>
+      <li>PostgreSQL or MongoDB?</li>
+      <li>Any integrations? (Stripe, Maps, Email, SMS)</li>
+    </ol>
+    <div class="divider"></div>
+    <p><strong>STEP 2 — After my answers, generate in order:</strong></p>
+    <ol>
+      <li><strong>PRD Document</strong> (Markdown) with personas, features by priority, module list, 4-phase roadmap</li>
+      <li><strong>Tech Stack Justification</strong> — why each tool for my specific project</li>
+      <li><strong>Complete Prisma Schema</strong> — all models, relations, enums</li>
+      <li><strong>NestJS Module List</strong> — what modules to generate and why</li>
+      <li><strong>All API Endpoints</strong> — table with method, route, auth, description</li>
+      <li><strong>Complete Auth Module Code</strong> — service, controller, guards, strategy, DTOs</li>
+      <li><strong>Lovable UI Prompt</strong> — a detailed prompt for generating the web UI</li>
+      <li><strong>React Native Structure</strong> — screen list, navigation setup, API service file</li>
+    </ol>
+    <div class="divider"></div>
+    <p><strong>Rules:</strong> Generate code in TypeScript. Use NestJS + Prisma + PostgreSQL + Next.js 14 + React Native Expo. Follow clean architecture. Add code comments. Make it production-ready.</p>
+    <p style="margin-top:12px">Author: <strong>M.H.M. Faskath</strong> | faskath9054@gmail.com | +94 757 507 441</p>
+  </div>
+</div>
+</section>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="footer-name">M.H.M. FASKATH</div>
+  <div class="footer-role">AI Automation Engineer Intern · IT Undergraduate @ University of Moratuwa · Sri Lanka</div>
+  <div class="footer-links">
+    <a href="mailto:faskath9054@gmail.com" class="footer-link">✉ faskath9054@gmail.com</a>
+    <a href="tel:+94757507441" class="footer-link">📞 +94 757 507 441</a>
+    <span class="footer-link">🎓 University of Moratuwa, Sri Lanka</span>
+  </div>
+  <p class="copy">Built by Faskath · Full-Stack AI Development Playbook · E2E Guide v1.0</p>
+  <p class="copy" style="margin-top:6px;font-size:0.72rem">For services, consulting, or collaboration — reach out via email or phone above.</p>
+</footer>
+
+<script>
+// ── TAB SWITCHING ──────────────────────────────────────────────────
+function switchTab(btn, targetId) {
+  const group = btn.closest('.tab-group');
+  group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  group.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(targetId).classList.add('active');
+}
+
+// ── COPY CODE ─────────────────────────────────────────────────────
+function copyCode(btn) {
+  const code = btn.closest('.code-section').querySelector('.code-body code');
+  const text = code.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.style.color = 'var(--accent3)';
+    btn.style.borderColor = 'rgba(16,185,129,0.4)';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  });
+}
+
+// ── SECTION DOTS ──────────────────────────────────────────────────
+const sections = ['sec-0','sec-1','sec-2','sec-3','sec-4','sec-5','sec-6','sec-7','sec-8','sec-9'];
+const dots = document.querySelectorAll('.si-dot');
+
+function scrollToSection(i) {
+  const el = document.getElementById(sections[i]);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = sections.indexOf(entry.target.id);
+      if (idx >= 0) {
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[idx]) dots[idx].classList.add('active');
+      }
+    }
+  });
+}, { threshold: 0.3 });
+
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// ── STEP PILLS ACTIVE STATE ───────────────────────────────────────
+document.querySelectorAll('.step-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('.step-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ── SUBTLE HOVER GLOW ON PHASE CARDS ─────────────────────────────
+document.querySelectorAll('.phase-card, .stack-item').forEach(card => {
+  card.addEventListener('mousemove', function(e) {
+    const rect = this.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    this.style.setProperty('--mouse-x', x + '%');
+    this.style.setProperty('--mouse-y', y + '%');
+  });
+});
+</script>
+</body>
+</html>
